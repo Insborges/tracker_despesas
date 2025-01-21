@@ -32,6 +32,8 @@ class _ExpensesState extends State<Expenses> {
   // Abre um modal para adicionar uma nova despesa
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+        useSafeArea:
+            true, //Evitar estar em cima da camara que está embutida no ecrã
         isScrollControlled:
             true, // Permite que o modal ocupe mais espaço ao ser apresentado
         context: context,
@@ -78,6 +80,10 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width =
+        MediaQuery.of(context).size.width; //Diz qual a comprimento do ecrã
+    //print(MediaQuery.of(context).size.height); //Diz qual a altura do ecrã
+
     // Conteúdo principal mostrado quando não existem despesas
     Widget mainContent = const Center(
       child: Text(
@@ -95,6 +101,7 @@ class _ExpensesState extends State<Expenses> {
 
     return Scaffold(
       appBar: AppBar(
+        //centerTitle: false,
         title: const Text('Flutter Expenses Tracker'), // Título no topo do ecrã
         actions: [
           IconButton(
@@ -104,16 +111,28 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Chart(
-              expenses:
-                  _registeredExpenses), // Gráfico para representar as despesas
-          Expanded(
-            child: mainContent, // Mostra a lista ou a mensagem padrão
-          )
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(
+                    expenses:
+                        _registeredExpenses), // Gráfico para representar as despesas
+                Expanded(
+                  child: mainContent, // Mostra a lista ou a mensagem padrão
+                )
+              ],
+            )
+          : Row(
+              children: [
+                //Vai ocupar só o comprimento necessário na Row
+                Expanded(
+                  child: Chart(expenses: _registeredExpenses),
+                ), // Gráfico para representar as despesas
+                Expanded(
+                  child: mainContent, // Mostra a lista ou a mensagem padrão
+                ),
+              ],
+            ),
     );
   }
 }

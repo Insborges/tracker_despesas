@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:expense_tracker/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
@@ -35,19 +39,24 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  // Função para submeter os dados da despesa
-  void _submitExpenseData() {
-    final enteredAmount = double.tryParse(
-        _amountController.text); // Tenta converter o valor inserido para double
-
-    final amountIsInvalid = enteredAmount == null ||
-        enteredAmount <= 0; // Verifica se o valor é válido
-
-    // Verifica se todos os campos estão corretamente preenchidos
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
-      // Exibe um alerta caso algum campo esteja vazio ou inválido
+  void _showDialog() {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+          context: context,
+          builder: (ctx) => CupertinoAlertDialog(
+                title: const Text('Error!'),
+                content: const Text(
+                    'Por favor verifica se todos os dados estão a ser inseridos de forma correta ou se todos os espaços foram inseridos'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx); // Fecha o alerta
+                    },
+                    child: const Text('Okay'),
+                  )
+                ],
+              ));
+    } else {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -64,6 +73,23 @@ class _NewExpenseState extends State<NewExpense> {
           ],
         ),
       );
+    }
+    // Exibe um alerta caso algum campo esteja vazio ou inválido
+  }
+
+  // Função para submeter os dados da despesa
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(
+        _amountController.text); // Tenta converter o valor inserido para double
+
+    final amountIsInvalid = enteredAmount == null ||
+        enteredAmount <= 0; // Verifica se o valor é válido
+
+    // Verifica se todos os campos estão corretamente preenchidos
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      _showDialog();
       return; // Interrompe a execução caso algum dado seja inválido
     }
 
@@ -87,99 +113,213 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          // Campo para inserir o título da despesa
-          TextField(
-            controller: _titleController,
-            maxLength: 50, // Limita o número de caracteres
-            decoration: const InputDecoration(
-              label: Text('Tittle'),
-            ),
-          ),
-          Row(
-            children: [
-              // Campo para inserir o valor da despesa
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number, // Só permite números
-                  decoration: const InputDecoration(
-                    prefixText: '€', // Exibe o símbolo do euro antes do valor
-                    label: Text('Amount'),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              // Exibe a data selecionada
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'No date selected'
-                          : formatter.format(_selectedDate!), // Formata a data
-                    ),
-                    // Ícone para abrir o seletor de data
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: const Icon(
-                        Icons.calendar_month,
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              // Dropdown para selecionar a categoria da despesa
-              DropdownButton(
-                value: _selectedCategory,
-                items: Category.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(
-                          category.name
-                              .toUpperCase(), // Exibe a categoria em maiúsculas
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return LayoutBuilder(builder: (ctx, constraints) {
+      final width = constraints.maxWidth;
+
+      return SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+            child: Column(
+              children: [
+                if (width >= 600)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _titleController,
+                          maxLength: 50, // Limita o número de caracteres
+                          decoration: const InputDecoration(
+                            label: Text('Tittle'),
+                          ),
                         ),
                       ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  setState(() {
-                    _selectedCategory =
-                        value; // Atualiza a categoria selecionada
-                  });
-                },
-              ),
-              const Spacer(),
-              // Botão para cancelar e voltar à tela anterior
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Fecha a tela de adicionar despesa
-                },
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed:
-                    _submitExpenseData, // Chama a função para submeter os dados
-                child: const Text('Save Expense'),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType:
+                              TextInputType.number, // Só permite números
+                          decoration: const InputDecoration(
+                            prefixText:
+                                '€', // Exibe o símbolo do euro antes do valor
+                            label: Text('Amount'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  // Campo para inserir o título da despesa
+                  TextField(
+                    controller: _titleController,
+                    maxLength: 50, // Limita o número de caracteres
+                    decoration: const InputDecoration(
+                      label: Text('Tittle'),
+                    ),
+                  ),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      DropdownButton(
+                        value: _selectedCategory,
+                        items: Category.values
+                            .map(
+                              (category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(
+                                  category.name
+                                      .toUpperCase(), // Exibe a categoria em maiúsculas
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedCategory =
+                                value; // Atualiza a categoria selecionada
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _selectedDate == null
+                                  ? 'No date selected'
+                                  : formatter
+                                      .format(_selectedDate!), // Formata a data
+                            ),
+                            // Ícone para abrir o seletor de data
+                            IconButton(
+                              onPressed: _presentDatePicker,
+                              icon: const Icon(
+                                Icons.calendar_month,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      // Campo para inserir o valor da despesa
+                      Expanded(
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType:
+                              TextInputType.number, // Só permite números
+                          decoration: const InputDecoration(
+                            prefixText:
+                                '€', // Exibe o símbolo do euro antes do valor
+                            label: Text('Amount'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Exibe a data selecionada
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _selectedDate == null
+                                  ? 'No date selected'
+                                  : formatter
+                                      .format(_selectedDate!), // Formata a data
+                            ),
+                            // Ícone para abrir o seletor de data
+                            IconButton(
+                              onPressed: _presentDatePicker,
+                              icon: const Icon(
+                                Icons.calendar_month,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                const SizedBox(height: 16),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      const Spacer(),
+                      // Botão para cancelar e voltar à tela anterior
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(
+                              context); // Fecha a tela de adicionar despesa
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed:
+                            _submitExpenseData, // Chama a função para submeter os dados
+                        child: const Text('Save Expense'),
+                      )
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      // Dropdown para selecionar a categoria da despesa
+                      DropdownButton(
+                        value: _selectedCategory,
+                        items: Category.values
+                            .map(
+                              (category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(
+                                  category.name
+                                      .toUpperCase(), // Exibe a categoria em maiúsculas
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedCategory =
+                                value; // Atualiza a categoria selecionada
+                          });
+                        },
+                      ),
+                      const Spacer(),
+                      // Botão para cancelar e voltar à tela anterior
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(
+                              context); // Fecha a tela de adicionar despesa
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed:
+                            _submitExpenseData, // Chama a função para submeter os dados
+                        child: const Text('Save Expense'),
+                      )
+                    ],
+                  )
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

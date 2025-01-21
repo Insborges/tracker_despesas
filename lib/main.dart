@@ -18,64 +18,64 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  //Diz que a app só pode ser usada da forma vertical
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]).then((fn) {
-    runApp(
-      MaterialApp(
-        darkTheme: ThemeData.dark().copyWith(
-          colorScheme: kDarkColorScheme, // Aplica o esquema de cores escuro
-          cardTheme: const CardTheme().copyWith(
-            color:
-                kDarkColorScheme.secondaryContainer, // Cor de fundo dos cartões
-            margin: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: kDarkColorScheme
-                  .primaryContainer, // Cor de fundo dos botões elevados
-              foregroundColor:
-                  kDarkColorScheme.onPrimaryContainer, // Cor do texto
-            ),
+  // WidgetsFlutterBinding.ensureInitialized();
+  // //Diz que a app só pode ser usada da forma vertical
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  // ]).then((fn) {
+  runApp(
+    MaterialApp(
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: kDarkColorScheme, // Aplica o esquema de cores escuro
+        cardTheme: const CardTheme().copyWith(
+          color:
+              kDarkColorScheme.secondaryContainer, // Cor de fundo dos cartões
+          margin: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
           ),
         ),
-        theme: ThemeData().copyWith(
-          colorScheme: kColorScheme, // Aplica o esquema de cores claro
-          appBarTheme: const AppBarTheme().copyWith(
-            backgroundColor:
-                kColorScheme.onPrimaryContainer, // Cor de fundo da AppBar
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kDarkColorScheme
+                .primaryContainer, // Cor de fundo dos botões elevados
             foregroundColor:
-                kColorScheme.primaryContainer, // Cor do texto e ícones
+                kDarkColorScheme.onPrimaryContainer, // Cor do texto
           ),
-          cardTheme: const CardTheme().copyWith(
-            color: kColorScheme.secondaryContainer, // Cor de fundo dos cartões
-            margin: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: kColorScheme
-                  .primaryContainer, // Cor de fundo dos botões elevados
-            ),
-          ),
-          textTheme: ThemeData().textTheme.copyWith(
-                titleLarge: TextStyle(
-                  fontWeight: FontWeight.bold, // Define o texto como negrito
-                  color: kColorScheme.onSecondaryContainer, // Cor do texto
-                  fontSize: 16, // Tamanho da fonte
-                ),
-              ),
         ),
-        // themeMode: ThemeMode.system, // Utiliza o tema baseado no sistema do utilizador
-        home: const Expenses(), // Define o widget inicial da aplicação
       ),
-    );
-  });
+      theme: ThemeData().copyWith(
+        colorScheme: kColorScheme, // Aplica o esquema de cores claro
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor:
+              kColorScheme.onPrimaryContainer, // Cor de fundo da AppBar
+          foregroundColor:
+              kColorScheme.primaryContainer, // Cor do texto e ícones
+        ),
+        cardTheme: const CardTheme().copyWith(
+          color: kColorScheme.secondaryContainer, // Cor de fundo dos cartões
+          margin: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kColorScheme
+                .primaryContainer, // Cor de fundo dos botões elevados
+          ),
+        ),
+        textTheme: ThemeData().textTheme.copyWith(
+              titleLarge: TextStyle(
+                fontWeight: FontWeight.bold, // Define o texto como negrito
+                color: kColorScheme.onSecondaryContainer, // Cor do texto
+                fontSize: 16, // Tamanho da fonte
+              ),
+            ),
+      ),
+      // themeMode: ThemeMode.system, // Utiliza o tema baseado no sistema do utilizador
+      home: const Expenses(), // Define o widget inicial da aplicação
+    ),
+  );
+  // });
 }
