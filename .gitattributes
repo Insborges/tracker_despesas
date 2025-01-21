@@ -1,5 +1,10 @@
+# Forçar o reconhecimento da linguagem principal
 *.dart linguist-language=Dart
+
+# Ignorar ficheiros de configuração ou outros tipos
 *.yaml linguist-detectable=false
 *.json linguist-detectable=false
 *.html linguist-detectable=false
+*.css linguist-detectable=false
+*.md linguist-detectable=false
 
