@@ -1,17 +1,22 @@
-# expense_tracker
+# Expenses Tracker App em Flutter
 
-A new Flutter project.
+**Expenses Tracker App** é um aplicativo desenvolvido em Flutter que ajuda os utilizadores a gerenciar suas finanças pessoais. Com ele, é possível registrar despesas ao longo do tempo, visualizar todas as despesas na página principal e analisar os gastos por meio de um gráfico interativo que mostra as categorias onde mais se gastou. Este projeto foi criado como parte de um curso de Flutter, com o objetivo de praticar e aprimorar habilidades no desenvolvimento de aplicativos móveis multiplataforma.
 
-## Getting Started
+## 🛠️ Construído com
+     - Flutter - Framework para desenvolvimento de aplicativos multiplataforma.
+     - Dart - Linguagem de programação utilizada pelo Flutter.
+     - Visual Studio Code - Editor de código com suporte a Flutter através de extensões.
 
-This project is a starting point for a Flutter application.
+## 📌 Funcionalidades
+     - Registro de Despesas: Adicione despesas com detalhes como valor, categoria, data e descrição.
+     - Lista de Despesas: Visualize todas as despesas registradas na página principal.
+     - Gráfico de Gastos: Um gráfico interativo mostra as categorias onde mais se gastou, ajudando na análise financeira.
+     - Interface Intuitiva: Design moderno e fácil de usar, com navegação fluida.
 
-A few resources to get you started if this is your first Flutter project:
+## ✒️ Autores
+Inês Borges - Desenvolvedora - Insborges |
+Maximilian Schwarzmüller - Instrutor 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"#tracker_despesas" 
+## 🎁 Agradecimentos
+    Agradeço ao curso de Flutter que serviu como base para este projeto.
+    Um agradecimento especial à comunidade Flutter por fornecer recursos e suporte incríveis.
